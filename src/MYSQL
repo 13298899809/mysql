@@ -1,0 +1,157 @@
+# 进阶一 基础查询
+-- 查询表中的单个字段
+SELECT Id FROM emp;
+-- 查询表中的多个字段   `` 着重号的作用: 为了声明这是一个字段 而不是一个关键字
+SELECT id,name,`phone_number` FROM emp;
+-- 查询表中的所有字段
+SELECT * FROM emp;
+-- 查询常量值
+SELECT 100;
+-- 查询表达式
+SELECT 100*5;
+SELECT sin(30);
+-- 查询函数
+SELECT version();
+-- 起别名
+SELECT now() AS time;
+SELECT now()  time;
+SELECT now() 'zhang san';
+-- 去重
+  #需求: 查询用户表中所有的部门编号 显然下面的语句是不符合要求的
+SELECT dept_id FROM emp;
+SELECT DISTINCT dept_id FROM emp;
+-- 字符串拼接
+SELECT concat(name,job_id) FROM emp;
+SELECT concat(name,phone_number) FROM emp;
+SELECT concat(name,ifnull(phone_number,0)) FROM emp;
+# 进阶二 条件查询
+  -- 条件运算符
+SELECT * FROM emp WHERE id=1;
+SELECT * FROM emp WHERE id>1;
+SELECT * FROM emp WHERE id<2;
+SELECT * FROM emp WHERE id>=1;
+SELECT * FROM emp WHERE id<=1;
+SELECT * FROM emp WHERE id!=1;
+ -- 逻辑运算符 and or not
+SELECT * FROM emp WHERE id=1 AND job_id=1;
+SELECT * FROM emp WHERE id=1 OR job_id=2;
+SELECT * FROM emp WHERE NOT (id = 1);
+SELECT * FROM emp WHERE NOT (id = 1) AND dept_id=2;
+ -- 模糊查询
+ --  like
+ --  between and
+ --  in
+ --  is null| is not null
+ --  安全等于
+SELECT * FROM emp WHERE name LIKE '%董事%';
+SELECT * FROM emp WHERE name LIKE '%_事长';
+SELECT * FROM emp WHERE name LIKE '%__冰%';
+SELECT * FROM emp WHERE id BETWEEN 1 AND 3;
+SELECT * FROM emp WHERE id IN (1,2,3);
+SELECT * FROM emp WHERE commission_prc is null;
+SELECT * FROM emp WHERE emp.salary is NOT null;
+SELECT * FROM emp WHERE emp.commission_prc <=> null;
+SELECT * FROM emp WHERE emp.salary <=> 100000;
+  -- ifnull() 判断字段是否为空 如果满足 返回指定的值 否则 返回本体
+SELECT ifnull(salary,0),salary FROM emp ;
+  -- isnull() 判断字段是否为空 如果空 返回1  否则 返回0
+SELECT isnull(salary) FROM emp;
+# 进阶二 排序查询
+ -- desc 降序
+ -- asc  升序
+ -- asc 默认
+SELECT * FROM emp ORDER BY id DESC ;
+SELECT * FROM emp ORDER BY id ASC ;
+SELECT * FROM emp ORDER BY id ;
+-- 查询员工工资 从高到底排序
+SELECT * FROM emp  ORDER BY salary DESC ;
+-- 查询员工工资 从年薪高到底排序
+SELECT * FROM emp  ORDER BY ifnull(salary,0)+ifnull(commission_prc,0) DESC ;
+-- 按照姓名长度 排序
+SELECT * FROM emp ORDER BY length(name) DESC ;
+-- 先按照职位 后按照工资
+SELECT * FROM emp ORDER BY dept_id ASC ,salary DESC ;
+# 进阶三 常见函数
+-- ------------------字符型函数-------------------------------------
+ SELECT concat('a','b','c','d') FROM dual; -- 字符串拼接
+ SELECT length('123123123') FROM dual; -- 返回字节个数
+ SELECT length('张三') FROM dual; -- 返回字节个数 6
+ SHOW VARIABLES LIKE '%character%';   -- 查看字符集
+ SELECT locate('o','hello world') FROM dual; -- 返回字符串substr 第一次在str中出现的位置
+ SELECT instr('hello world','o') FROM dual; -- 返回字符串str 第一次在substr中出现的位置
+ SELECT upper('aaa') FROM dual; -- 大写
+ SELECT lower('AAA') FROM dual; -- 小写
+ SELECT substr('hello wprld',5) FROM dual;  -- 字符串截取
+ SELECT substr('hello world',5,3) FROM dual; -- 字符串截取
+ SELECT trim(' a b c ') FROM dual; -- 删除前缀和后缀
+ SELECT trim( 'a' FROM 'aaa张aaa无aaa忌aaaaaa') FROM dual; -- 删除前缀和后缀有a字符的关键字
+ SELECT lpad('六大门派围攻光明顶',50,'*') FROM dual; -- 用指定的字符实现左填充指定长度
+ SELECT rpad('六大门派围攻光明顶',50,'*') FROM dual; -- 用指定的字符实现左填充指定长度
+ SELECT replace('张无忌爱上周芷若' ,'周芷若','赵敏') FROM dual; -- 字符串替换
+ SELECT reverse('无忌,还记得多少') FROM dual;   -- 字符串翻转
+-- ------------------数学函数---------------------------------------
+ SELECT abs(-1) FROM dual; -- 绝对值
+ SELECT mod(10,5) FROM dual; -- 余数
+ SELECT floor(123.99) FROM dual; -- 返回不大于x的最大整数值
+ SELECT ceil(123.99) FROM dual; -- 返回不小于x的最大整数值
+ SELECT round(123.99) FROM dual; -- 返回四舍五入的整数值
+ SELECT truncate(9527.9527,2) FROM dual; -- 小数点后面保留几位
+-- ------------------日期函数---------------------------------------
+ SELECT now();    -- 当前时间
+ SELECT curdate(); -- 当前日期
+ SELECT current_date; -- 当前日期
+ SELECT current_time; -- 当前时间
+ SELECT current_timestamp;  -- 当前时间戳
+ SELECT year(now()) , month(now()),day(now()) FROM dual; -- 年 月 日
+ SELECT dayofweek(now()) FROM dual;   -- 今天星期几
+ SELECT dayofmonth(now()) FROM dual;   -- 本月第几天
+ SELECT dayofyear(now()) FROM dual;   -- 本年第几天
+ SELECT str_to_date('2018-01-01 21:02:03','%Y-%m-%d %H:%i:%s') FROM dual; -- 将日期格式的字符串 转换成指定的日期
+ SELECT str_to_date('18-01-01 12:02:03','%y-%c-%d %h:%i:%s') FROM dual; -- 将日期格式的字符串 转换成指定的日期
+ SELECT date_format('2018-02-02','%Y年%m月%d日') FROM dual; -- 将日期转换成字符
+ SELECT datediff('20180202','20180101') FROM dual;  -- 查询两个日期之间的天数只差
+ SELECT date_add('20170101',INTERVAL 1 DAY) FROM dual;  --  日期增加
+ SELECT date_sub('20170101',INTERVAL 1 DAY) FROM dual;  --  日期减少
+-- ------------------其他函数---------------------------------------
+ SELECT version();
+ SELECT database();
+ SHOW DATABASES ;
+ SELECT user();
+-- ------------------流程控制函数-----------------------------------
+SELECT if(substr(now(),1,4)=2018,'今年是2018年','今年不是2018年') FROM dual;
+SELECT CASE substr(now(),1,4) WHEN 2018 THEN '今年是2018' ELSE '今年不是2018' end FROM dual;
+
+# 进阶四 分组函数
+/**
+ 功能 : 用过统计中使用 , 又称为聚合函数或组函数
+ 分类 : sum avg max min count
+ 特点 : sum avg 一般处理数值类型
+        max min count 处理任何类型
+        是否忽略null
+ */
+ -- 1 简单的使用
+ SELECT sum(ifnull(salary,0)) FROM emp;
+ SELECT avg(ifnull(salary,0)) FROM emp;
+ SELECT max(ifnull(salary,0)) FROM emp;
+ SELECT min(ifnull(salary,0)) FROM emp;
+ SELECT count(ifnull(salary,0)) FROM emp;
+ -- 2 参数支持哪些类型
+ SELECT sum(ifnull(salary,'a')) FROM emp;
+ SELECT avg(ifnull(salary,'a')) FROM emp;
+ SELECT max(ifnull(salary,'a')) FROM emp;
+ SELECT min(ifnull(salary,'a')) FROM emp;
+ SELECT count(ifnull(salary,'a')) FROM emp;
+ -- 3 参数忽略null
+ SELECT sum(salary) FROM emp;
+ SELECT avg(salary) FROM emp;
+ SELECT max(salary) FROM emp;
+ SELECT min(salary) FROM emp;
+ SELECT count(salary) FROM emp;
+# 进阶五 分组函数
+ -- 查询每个部门的平均工资
+ SELECT avg(salary),dept_id FROM emp GROUP BY dept_id;
+
+
+
+
+
