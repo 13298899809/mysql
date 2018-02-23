@@ -148,8 +148,29 @@ SELECT CASE substr(now(),1,4) WHEN 2018 THEN '今年是2018' ELSE '今年不是2
  SELECT min(salary) FROM emp;
  SELECT count(salary) FROM emp;
 # 进阶五 分组函数
+    特点:
+            1 分组查询中的筛选条件分为两类
+                                数据源不一样~~~                               关键字
+                分组前筛选       原始表                     group by 前面     where
+                分组后筛选       分组后的结果集             group by 后面     having
+                ①分组函数做条件肯定放在having子句中
+                ②能用分组前筛选优先考虑分组前筛选
  -- 查询每个部门的平均工资
  SELECT avg(salary),dept_id FROM emp GROUP BY dept_id;
+ -- 查询那个部门的员工数量大于2
+ SELECT count(*) ,gender FROM tbl_emp GROUP BY gender HAVING count(*) > 2;
+# 进阶六 连接查询
+    连接分类:
+        ①内连接
+            等值连接
+            非等值连接
+            自连接
+        ②外连接
+            左外连接
+            右外连接
+            全外连接
+        ③交叉连接
+
 
 
 
