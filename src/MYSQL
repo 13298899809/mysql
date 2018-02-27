@@ -175,4 +175,46 @@ SELECT CASE substr(now(),1,4) WHEN 2018 THEN '今年是2018' ELSE '今年不是2
 
 
 
+SELECT
+  g.name,
+  ifnull(b.name,'无')
+FROM girl g LEFT JOIN boy b ON g.boy_id = b.id;
+
+
+
+ # 进阶九 联合查询
+ -- union 过滤重复数据
+ SELECT * FROM girl WHERE id = 5
+ UNION
+ SELECT * FROM girl WHERE boy_id = 2;
+ -- union 显示全部
+ SELECT * FROM girl WHERE id = 5
+ UNION ALL
+ SELECT * FROM girl WHERE boy_id = 2;
+
+-- 数据插入
+INSERT INTO girl VALUES (13,'孙燕姿',3);
+INSERT INTO girl SET id = 14,name='张靓颖',boy_id = 3;
+INSERT INTO girl VALUES (15,'何洁',3),(16,'刘亦菲',3);
+-- 数据更新
+UPDATE girl SET boy_id = 4 WHERE name = '刘亦菲';
+-- 级联更新
+UPDATE boy b INNER JOIN girl g ON b.id = g.boy_id
+SET b.girl_id = '123'
+WHERE g.name='周芷若';
+-- 数据删除
+DELETE FROM a WHERE riqi = 3;
+-- 级联删除
+DELETE b FROM girl g INNER JOIN boy b ON g.boy_id=b.id
+WHERE g.name='周芷若';
+-- 清空数据
+TRUNCATE TABLE girl;
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS books;
+-- 解决新增数据默认主键
+INSERT INTO tbl_emp VALUES (NULL ,'zhangsan','gender','aiteqq.com');
+
+
+
+
 
